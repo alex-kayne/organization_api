@@ -1,5 +1,4 @@
 from typing import Annotated
-from urllib import response
 
 from fastapi import APIRouter, Depends, Query, Response, status
 
@@ -14,6 +13,7 @@ router = APIRouter()
 
 @router.post("/departments/", tags=["Organization"], response_model=DepartmentCreateResponse)
 async def create_department(payload: DepartmentCreateRequest,
+                            response: Response,
                             organization_service: OrganizationService = Depends(
                                 get_organization_service)) -> DepartmentCreateResponse:
     """

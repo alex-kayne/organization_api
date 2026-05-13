@@ -7,7 +7,7 @@ NameStr = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, 
 
 
 class DepartmentCreateRequest(BaseModel):
-    name: str = NameStr
+    name: NameStr
     parent_id: int | None
 
 
@@ -39,7 +39,7 @@ class DepartmentGetResponse(BaseModel):
 
 
 class DepartmentUpdateRequest(BaseModel):
-    name: str | None
+    name: NameStr | None
     parent_id: int | None
 
 
