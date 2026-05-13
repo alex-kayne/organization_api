@@ -17,7 +17,7 @@ async def create_department(payload: DepartmentCreateRequest,
                             organization_service: OrganizationService = Depends(
                                 get_organization_service)) -> DepartmentCreateResponse:
     """
-    Department creation
+    Создание департамента
     """
     if not (department_id := await organization_service.create_department(payload)):
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -32,7 +32,7 @@ async def create_employee(department_id: int,
                           organization_service: OrganizationService = Depends(
                               get_organization_service)) -> EmployeeCreateResponse:
     """
-    Employee creation
+    Создание работника
     """
     if not (employee_id := await organization_service.create_employee(department_id, payload)):
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -47,7 +47,7 @@ async def get_department(department_id: int,
                          organization_service: OrganizationService = Depends(
                              get_organization_service)) -> DepartmentGetResponse:
     """
-    Department retrieval
+    Получение департамента
     """
     return await organization_service.get_department(department_id, payload)
 
@@ -59,7 +59,7 @@ async def update_department(department_id: int,
                                 get_organization_service)
                             ) -> DepartmentUpdateResponse:
     """
-    Department updating
+    Обновление департамента
     """
     if not (updated_id := await organization_service.update_department(department_id, payload)):
         return DepartmentUpdateResponse(id=payload.parent_id, message="Wrong department parent id")
@@ -72,7 +72,7 @@ async def delete_department(department_id: int,
                             organization_service: OrganizationService = Depends(
                                 get_organization_service)) -> DepartmentDeleteResponse:
     """
-    Department deleting
+    Удаление департамента
     """
     await organization_service.delete_department(department_id, payload)
     return DepartmentDeleteResponse()
