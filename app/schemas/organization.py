@@ -1,14 +1,19 @@
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Sequence
 
 from pydantic import BaseModel, Field, model_validator
-
-from app.models.organization import Departament, Employee
 
 
 class DepartmentCreateRequest(BaseModel):
     name: str
     parent_id: int | None
+
+    @model_validator(mode="after")
+    def check_data(self) -> 'DepartmentCreateRequest':
+        self.name = self.name.strip()
+        if len(self.name) > 200:
+            raise ValueError("Department name cannot be longer than 200 characters")
+        return self
 
 
 class DepartmentCreateResponse(BaseModel):
@@ -21,21 +26,33 @@ class EmployeeCreateRequest(BaseModel):
     position: str
     hired_at: datetime | None
 
+    @model_validator(mode="after")
+    def check_data(self) -> 'EmployeeCreateRequest':
+        self.full_name = self.full_name.strip()
+        if len(self.full_name) > 200:
+            raise ValueError("Employee full name cannot be longer than 200 characters")
+
+        self.position = self.position.strip()
+        if len(self.position) > 200:
+            raise ValueError("Employee position cannot be longer than 200 characters")
+
+        return self
+
 
 class EmployeeCreateResponse(BaseModel):
     id: int
     message: str = "Employee created"
 
 
-class DepartamentGetRequest(BaseModel):
+class DepartmentGetRequest(BaseModel):
     depth: int = Field(default=1, le=5)
     include_employees: bool = True
 
 
 class DepartmentGetResponse(BaseModel):
-    department: Departament
-    employees: list[Employee] | None
-    children: list[Departament]
+    department: dict | None
+    employees: Sequence[dict] | None
+    children: Sequence[dict]
 
 
 class DepartmentUpdateRequest(BaseModel):
@@ -44,7 +61,7 @@ class DepartmentUpdateRequest(BaseModel):
 
 
 class DepartmentUpdateResponse(BaseModel):
-    id: int
+    id: int | None
     message: str = "Department updated"
 
 
@@ -61,4 +78,3 @@ class DepartmentDeleteRequest(BaseModel):
 
 class DepartmentDeleteResponse(BaseModel):
     message: str = "Department deleted"
-
