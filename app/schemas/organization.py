@@ -1,19 +1,14 @@
 from datetime import datetime
-from typing import Literal, Sequence
+from typing import Literal, Sequence, Annotated
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, model_validator, StringConstraints
+
+NameStr = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
 
 
 class DepartmentCreateRequest(BaseModel):
-    name: str
+    name: str = NameStr
     parent_id: int | None
-
-    @model_validator(mode="after")
-    def check_data(self) -> 'DepartmentCreateRequest':
-        self.name = self.name.strip()
-        if len(self.name) > 200:
-            raise ValueError("Department name cannot be longer than 200 characters")
-        return self
 
 
 class DepartmentCreateResponse(BaseModel):
@@ -22,21 +17,9 @@ class DepartmentCreateResponse(BaseModel):
 
 
 class EmployeeCreateRequest(BaseModel):
-    full_name: str
-    position: str
+    full_name: NameStr
+    position: NameStr
     hired_at: datetime | None
-
-    @model_validator(mode="after")
-    def check_data(self) -> 'EmployeeCreateRequest':
-        self.full_name = self.full_name.strip()
-        if len(self.full_name) > 200:
-            raise ValueError("Employee full name cannot be longer than 200 characters")
-
-        self.position = self.position.strip()
-        if len(self.position) > 200:
-            raise ValueError("Employee position cannot be longer than 200 characters")
-
-        return self
 
 
 class EmployeeCreateResponse(BaseModel):

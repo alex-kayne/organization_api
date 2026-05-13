@@ -24,7 +24,7 @@ class Employee(Base):
     __tablename__ = "employee"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    department_id: Mapped[int | None] = mapped_column(ForeignKey("department.id"))
+    department_id: Mapped[int | None] = mapped_column(ForeignKey("department.id", ondelete="CASCADE"))
     full_name: Mapped[str]
     position: Mapped[str]
     hired_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))

@@ -24,7 +24,7 @@ class OrganizationRepository:
                                            full_name=payload.full_name,
                                            position=payload.position,
                                            hired_at=payload.hired_at,
-                                           created_at=dt_now).returning(Department.id)
+                                           created_at=dt_now).returning(Employee.id)
         result = await async_session.execute(employee)
         return result.fetchone()[0]
 
